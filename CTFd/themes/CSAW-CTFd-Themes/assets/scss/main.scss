@@ -39,7 +39,7 @@ $img-dir: "/themes/csaw24/static/img";
   }
 
   .jumbotron {
-    background-color: #ffffff !important;
+    background-color: var(--bs-primary) !important;
   }
 
   // Tailwind stuff
