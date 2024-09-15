@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>
+        {% trans %}Challenges{% endtrans %}
+      </h1>
+    </div>
+  </div>
+ 
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "components/errors.html" %}
+      </div>
+    </div>
+ 
+    <div 
+      x-data="ChallengeBoard" 
+      @load-challenges.window="loadChallenges()" 
+      @load-challenge.window="loadChallenge($event.detail)"
+    >
+      <div x-show="!loaded">
+        <div class="min-vh-50 d-flex align-items-center">
+          <div class="text-center w-100">
+            <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+          </div>
+        </div>
+      </div>
+ 
+      <div x-show="loaded">
+        <template x-for="(category, idx) in getCategories()" :key="idx">
+          <div class="pt-5">
+            <div class="category-header mb-3">
+              <h3 x-text="category"></h3>
+            </div>
+            <div class="category-challenges d-flex flex-column">
+              <div class="challenges-row row">
+                <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
+                  <div class="col-12">
+                    <div class="challenge-details my-3" :id="`challenge-details-${c.id}`" x-init="fetchChallengeDetails(c.id)">
+                      <h4 x-text="c.name"></h4>
+                      <p x-text="c.description"></p>
+                      <p>Category: <span x-text="c.category"></span></p>
+                      <p>Points: <span x-text="c.points"></span></p>
+                      <input type="text" placeholder="Enter flag" :id="`flag-input-${c.id}`">
+                      <button @click="submitFlag(c.id)">Submit Flag</button>
+                      <div :id="`response-${c.id}`"></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+ 
+            <script>
+              function fetchChallengeDetails(challengeId) {
+                fetch(`api/v1/challenges/${challengeId}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    // Update DOM with the data
+                    const challengeElement = document.querySelector(`#challenge-details-${data.data.id}`);
+                    if (challengeElement) {
+                      challengeElement.innerHTML = `
+                        <h2>${data.data.name}</h2>
+                        <p>${data.data.description}</p>
+                        <p>Points: ${data.data.value}</p>
+                        <input type="text" placeholder="Enter flag" id="flag-input-${data.data.id}">
+                        <button onclick="submitFlag(${data.data.id})">Submit Flag</button>
+                        <div id="response-${data.data.id}"></div>
+                      `;
+                    }
+                  })
+                  .catch(error => console.error('Error fetching data:', error));
+              }
+ 
+              function submitFlag(challengeId) {
+                const flag = document.querySelector(`#flag-input-${challengeId}`).value;
+                fetch(`/api/v1/challenges/attempt`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ challenge_id: challengeId, submission: flag })
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    // Display the response
+                    const responseElement = document.querySelector(`#response-${challengeId}`);
+                    if (responseElement) {
+                      responseElement.innerHTML = `
+                        <p>${data.message}</p>
+                      `;
+                    }
+                  })
+                  .catch(error => console.error('Error submitting flag:', error));
+              }
+            </script>
+ 
+ 
+ 
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+ 
+{% block scripts %}
+  {{ Assets.js("assets/js/challenges.js") }}
+ 
+{% endblock %}

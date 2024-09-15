@@ -1,0 +1,94 @@
+// Note this is our own module to import bootstrap CSS
+@use "includes/utils/bootstrap";
+
+@use "includes/components/table";
+@use "includes/components/jumbotron";
+@use "includes/components/challenge";
+@use "includes/components/sticky-footer";
+@use "includes/components/graphs";
+
+@use "includes/utils/fonts";
+@use "includes/utils/opacity";
+@use "includes/utils/min-height";
+@use "includes/utils/cursors";
+@use "includes/utils/lolight";
+
+@use "includes/utils/glitch";
+
+@use "includes/icons/award-icons";
+@use "includes/icons/flag-icons";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+$img-dir: "/themes/csaw24/static/img";
+
+// html {
+//  background-color: black !important;
+// }
+
+
+:root {
+  // Bootstrap stuff
+  --theme-color: var(--bs-primary);
+
+  .navbar {
+    background-color: var(--bs-primary) !important;
+  }
+
+  .jumbotron {
+    background-color: #ffffff !important;
+  }
+
+  // Tailwind stuff
+  // https://tailwindcss.com/docs/customizing-colors#using-css-variables 
+  // --color-primary: $nyu-violet
+}
+
+// .bg-img {
+// background-image: url("#{$img-dir}/geo.jpg");
+// }
+
+a {
+  text-decoration: none !important;
+  @apply text-secondary transition-all
+}
+
+a:hover {
+  @apply text-primary
+}
+
+blockquote {
+  border-left: 4px solid var(--bs-secondary);
+  padding-left: 15px;
+}
+
+input,
+select,
+button {
+  padding: 0.6rem !important;
+  height: auto !important;
+}
+
+.fa-spin.spinner {
+  text-align: center;
+  opacity: 0.5;
+}
+
+.badge-notification {
+  vertical-align: top;
+  margin-left: -1.5em;
+  font-size: 50%;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e");
+  background-size: 8px 10px;
+}
+
+// AHHHH QUICK FIX
+.ctf_logo {
+  height: 25px !important;
+}
