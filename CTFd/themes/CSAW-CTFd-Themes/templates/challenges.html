@@ -75,26 +75,36 @@
               }
  
               function submitFlag(challengeId) {
-                const flag = document.querySelector(`#flag-input-${challengeId}`).value;
-                fetch(`/api/v1/challenges/attempt`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ challenge_id: challengeId, submission: flag })
-                })
-                  .then(response => response.json())
-                  .then(data => {
-                    // Display the response
-                    const responseElement = document.querySelector(`#response-${challengeId}`);
-                    if (responseElement) {
-                      responseElement.innerHTML = `
-                        <p>${data.message}</p>
-                      `;
-                    }
-                  })
-                  .catch(error => console.error('Error submitting flag:', error));
-              }
+    const flag = document.querySelector(`#flag-input-${challengeId}`).value;
+    const csrfToken = window.init.csrfNonce;
+ 
+    fetch(`/api/v1/challenges/attempt`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({ challenge_id: challengeId, submission: flag })
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display the response
+        const responseElement = document.querySelector(`#response-${challengeId}`);
+        if (responseElement) {
+          if (data.success) {
+            responseElement.innerHTML = `
+              <p>Status: ${data.data.status}</p>
+              <p>Message: ${data.data.message}</p>
+            `;
+          } else {
+            responseElement.innerHTML = `
+              <p>Error: ${data.message}</p>
+            `;
+          }
+        }
+      })
+      .catch(error => console.error('Error submitting flag:', error));
+  }
             </script>
  
  
