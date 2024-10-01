@@ -62,12 +62,19 @@
                     const challengeElement = document.querySelector(`#challenge-details-${data.data.id}`);
                     if (challengeElement) {
                       challengeElement.innerHTML = `
-                        <h2>${data.data.name}</h2>
-                        <p>${data.data.description}</p>
-                        <p>Points: ${data.data.value}</p>
-                        <input type="text" placeholder="Enter flag" id="flag-input-${data.data.id}">
-                        <button onclick="submitFlag(${data.data.id})">Submit Flag</button>
-                        <div id="response-${data.data.id}"></div>
+
+<div class="border-1 rounded" style="display: flex; justify-content: space-between; padding: 5px;">
+  <div style="flex: 1; text-align: left; padding-right: 10px;">
+    <h2 class="p-3">${data.data.name}</h2>
+    <p class="p-3">${data.data.description}heheh eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eeheh ehehe ehhe eheh ehehe ehhe ehehehehhei</p>
+    <p  class="p-3">Points: ${data.data.value}</p>
+  </div>
+  <div style="flex: 1; text-align: right; display: flex; flex-direction: column; justify-content: center;" class="p-3">
+    <input class="rounded" type="text" placeholder="Enter flag" id="flag-input-${data.data.id}" style="margin-bottom: 10px;">
+    <button onclick="submitFlag(${data.data.id})" class="border-1 rounded" style="background-color:#2b2a33; color: white;">Submit Flag</button>
+    <div id="response-${data.data.id}"></div>
+  </div>
+</div>
                       `;
                     }
                   })
