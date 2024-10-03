@@ -37,7 +37,7 @@
             </div>
             <div class="category-challenges d-flex flex-column">
               <div class="challenges-row row">
-                <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
+                <template x-for="(c, idx) in getChallenges(category).reverse()" :key="c.id">
                   <div class="col-12">
                     <div class="challenge-details my-3" :id="`challenge-details-${c.id}`" x-init="fetchChallengeDetails(c.id)">
                       <h4 x-text="c.name"></h4>
@@ -54,32 +54,38 @@
             </div>
  
             <script>
-              function fetchChallengeDetails(challengeId) {
-                fetch(`api/v1/challenges/${challengeId}`)
-                  .then(response => response.json())
-                  .then(data => {
-                    // Update DOM with the data
-                    const challengeElement = document.querySelector(`#challenge-details-${data.data.id}`);
-                    if (challengeElement) {
-                      challengeElement.innerHTML = `
-
-<div class="border-1 rounded" style="display: flex; justify-content: space-between; padding: 5px;">
-  <div style="flex: 1; text-align: left; padding-right: 10px;">
-    <h2 class="p-3">${data.data.name}</h2>
-    <p class="p-3">${data.data.description}</p>
-    <p  class="p-3">Points: ${data.data.value}</p>
-  </div>
-  <div style="flex: 1; text-align: right; display: flex; flex-direction: column; justify-content: center;" class="p-3">
-    <input class="rounded" type="text" placeholder="Enter flag" id="flag-input-${data.data.id}" style="margin-bottom: 10px;">
-    <button onclick="submitFlag(${data.data.id})" class="border-1 rounded" style="background-color:#2b2a33; color: white;">Submit Flag</button>
-    <div id="response-${data.data.id}"></div>
-  </div>
-</div>
-                      `;
-                    }
-                  })
-                  .catch(error => console.error('Error fetching data:', error));
-              }
+function fetchChallengeDetails(challengeId) {
+  const csrfToken = window.init.csrfNonce;
+  fetch(`api/v1/challenges/${challengeId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'CSRF-Token': csrfToken // Add the CSRF token here
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update DOM with the data
+    const challengeElement = document.querySelector(`#challenge-details-${data.data.id}`);
+    if (challengeElement) {
+      challengeElement.innerHTML = `
+        <div class="border-1 rounded" style="display: flex; justify-content: space-between; padding: 5px;">
+          <div style="flex: 1; text-align: left; padding-right: 10px;">
+            <h2 class="p-3" style="font-size: 2em;text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">${data.data.name}</h2>
+            <p class="p-3">${data.data.description}</p>
+            <p  class="p-3" style="text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">Points: ${data.data.value}</p>
+          </div>
+          <div style="flex: 1; text-align: right; display: flex; flex-direction: column; justify-content: center;" class="p-3">
+            <input class="rounded" type="text" placeholder="Enter flag" id="flag-input-${data.data.id}" style="margin-bottom: 10px;">
+            <button onclick="submitFlag(${data.data.id})" class="border-1 rounded" style="background-color:#2b2a33; color: white;">Submit Flag</button>
+            <div id="response-${data.data.id}"></div>
+          </div>
+        </div>
+      `;
+    }
+  })
+  .catch(error => console.error('Error fetching data:', error));
+}
  
               function submitFlag(challengeId) {
     const flag = document.querySelector(`#flag-input-${challengeId}`).value;
@@ -100,8 +106,8 @@
         if (responseElement) {
           if (data.success) {
             responseElement.innerHTML = `
-              <p>Status: ${data.data.status}</p>
-              <p>Message: ${data.data.message}</p>
+              <p style="padding: 5px">Status: ${data.data.status}</p>
+              <p style="padding: 5px">Message: ${data.data.message}</p>
             `;
           } else {
             responseElement.innerHTML = `
