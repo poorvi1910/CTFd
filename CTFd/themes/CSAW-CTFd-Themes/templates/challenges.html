@@ -1,5 +1,6 @@
 {% extends "base.html" %}
  
+
 {% block content %}
   <div class="jumbotron">
     <div class="container">
@@ -53,6 +54,13 @@
               </div>
             </div>
  
+            <style>
+@media (max-width: 768px) {
+    #flex-container {
+        flex-direction: column;
+    }
+}
+            </style>
             <script>
 function fetchChallengeDetails(challengeId) {
   const csrfToken = window.init.csrfNonce;
@@ -69,18 +77,20 @@ function fetchChallengeDetails(challengeId) {
     const challengeElement = document.querySelector(`#challenge-details-${data.data.id}`);
     if (challengeElement) {
       challengeElement.innerHTML = `
-        <div class="border-1 rounded" style="display: flex; justify-content: space-between; padding: 5px;">
-          <div style="flex: 1; text-align: left; padding-right: 10px;">
-            <h2 class="p-3" style="font-size: 2em;text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">${data.data.name}</h2>
-            <p class="p-3">${data.data.description}</p>
-            <p  class="p-3" style="text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">Points: ${data.data.value}</p>
-          </div>
-          <div style="flex: 1; text-align: right; display: flex; flex-direction: column; justify-content: center;" class="p-3">
-            <input class="rounded" type="text" placeholder="Enter flag" id="flag-input-${data.data.id}" style="margin-bottom: 10px;">
-            <button onclick="submitFlag(${data.data.id})" class="border-1 rounded" style="background-color:#2b2a33; color: white;">Submit Flag</button>
-            <div id="response-${data.data.id}"></div>
-          </div>
-        </div>
+
+
+<div class="border-1 rounded" style="display: flex; justify-content: space-between; padding: 5px;" id="flex-container">
+  <div style="flex: 1; text-align: left; padding-right: 10px;">
+    <h2 class="p-3" style="font-size: 2em;text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">${data.data.name}</h2>
+    <p class="p-3">${data.data.description}</p>
+    <p class="p-3" style="text-shadow: 1px 1px 2px red, 0 0 25px blue, 0 0 10px darkblue;">Points: ${data.data.value}</p>
+  </div>
+  <div style="flex: 1; text-align: right; display: flex; flex-direction: column; justify-content: center;" class="p-3">
+    <input class="rounded" type="text" placeholder="Enter flag" id="flag-input-${data.data.id}" style="margin-bottom: 10px;">
+    <button onclick="submitFlag(${data.data.id})" class="border-1 rounded" style="background-color:#2b2a33; color: white;">Submit Flag</button>
+    <div id="response-${data.data.id}"></div>
+  </div>
+</div>
       `;
     }
   })
